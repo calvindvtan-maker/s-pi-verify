@@ -1,1 +1,47 @@
 s.pi
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-Pi Store</title>
+    <!-- Nhúng SDK chính thức của Pi Network -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 12px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button { background-color: #673ab7; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 15px; }
+        button:hover { background-color: #512da8; }
+        #user-info { margin-top: 15px; font-weight: bold; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>S-Pi Store</h1>
+        <p>Chào mừng bạn đến với cửa hàng mua sắm bằng Pi!</p>
+        <button onclick="loginPi()">Đăng nhập bằng Ví Pi</button>
+        <div id="user-info"></div>
+    </div>
+
+    <script>
+        // Khởi tạo Pi SDK
+        const Pi = window.Pi;
+        Pi.init({ version: "2.0", sandbox: true }); // Chuyển sandbox: false khi chạy Mainnet chính thức
+
+        async function loginPi() {
+            try {
+                const scopes = ['username', 'payments'];
+                function onIncompletePaymentFound(payment) {
+                    console.log("Tìm thấy giao dịch chưa hoàn tất:", payment);
+                }
+
+                const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
+                document.getElementById('user-info').innerText = "Xin chào: " + auth.user.username;
+            } catch (err) {
+                console.error("Lỗi đăng nhập:", err);
+                alert("Không thể kết nối tài khoản Pi!");
+            }
+        }
+    </script>
+</body>
+</html>
